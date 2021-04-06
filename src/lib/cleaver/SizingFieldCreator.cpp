@@ -99,17 +99,17 @@ namespace cleaver
     return dist[l][m][n];
   }
 
-  int VoxelMesh::distSizeX() const
+  size_t VoxelMesh::distSizeX() const
   {
     return dist.size();
   }
 
-  int VoxelMesh::distSizeY() const
+  size_t VoxelMesh::distSizeY() const
   {
     return dist[0].size();
   }
 
-  int VoxelMesh::distSizeZ() const
+  size_t VoxelMesh::distSizeZ() const
   {
     return dist[0][0].size();
   }
