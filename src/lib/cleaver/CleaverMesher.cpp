@@ -158,7 +158,7 @@ namespace cleaver
 
     Json::Value badTets = root["badtets"];
     for (size_t i = 0; i < badTets.size(); i++) {
-      Json::Value tet = badTets[i];
+      Json::Value tet = badTets[static_cast<int>(i)];
       m_tets_to_record.insert((size_t)tet["parent"].asUInt64());
     }
 
