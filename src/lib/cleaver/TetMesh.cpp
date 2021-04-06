@@ -109,10 +109,10 @@ namespace cleaver
       delete faces[f];
     }
 
-    for (unsigned int v = 0; v < verts.size(); v++) {
+    for (size_t v = 0; v < verts.size(); v++) {
       delete verts[v];
     }
-    for (unsigned int t = 0; t < tets.size(); t++) {
+    for (size_t t = 0; t < tets.size(); t++) {
       delete tets[t];
     }
 
@@ -234,8 +234,8 @@ namespace cleaver
       cout << "Writing mesh ply file: " << filename + ".ply" << endl;
     ofstream file((filename + ".ply").c_str());
 
-    int face_count = 4*tets.size();
-    int vertex_count = 3*face_count;
+    size_t face_count = 4*tets.size();
+    size_t vertex_count = 3*face_count;
 
     //-----------------------------------
     //           Write Header
@@ -256,7 +256,7 @@ namespace cleaver
     //-----------------------------------
     //         Write Vertex List
     //-----------------------------------
-    for(unsigned int t=0; t < tets.size(); t++)
+    for(size_t t=0; t < tets.size(); t++)
     {
       Tet *tet = this->tets[t];
 
@@ -278,7 +278,7 @@ namespace cleaver
     //         Write Face List
     //-----------------------------------
     int idx = 0;
-    for(unsigned int t=0; t < tets.size(); t++)
+    for(size_t t=0; t < tets.size(); t++)
     {
       Tet *tet = this->tets[t];
 
@@ -320,7 +320,7 @@ namespace cleaver
         return false;
       }
   };
-  typedef std::map< const vec3, unsigned int, vec3_compare > VertMap;
+  typedef std::map< const vec3, size_t, vec3_compare > VertMap;
 
   //===================================================
   // writePly()
@@ -337,15 +337,15 @@ namespace cleaver
       cout << "Writing mesh ply file: " << filename + ".ply" << endl;
     ofstream file((filename + ".ply").c_str());
 
-    std::vector<unsigned int> interfaces;
-    std::vector<unsigned int> colors;
-    std::vector<unsigned int> keys;
+    std::vector<size_t> interfaces;
+    std::vector<size_t> colors;
+    std::vector<size_t> keys;
 
     // determine output faces and vertices vertex counts
     for(size_t f=0; f < faces.size(); f++)
     {
-      int t1_index = faces[f]->tets[0];
-      int t2_index = faces[f]->tets[1];
+      const int t1_index = static_cast<int>(faces[f]->tets[0]);
+      const int t2_index = static_cast<int>(faces[f]->tets[1]);
 
       if(t1_index < 0 || t2_index < 0){
         continue;
@@ -358,9 +358,9 @@ namespace cleaver
       {
         interfaces.push_back(f);
 
-        unsigned int color_key = (1 << (int)t1->mat_label) + (1 << (int)t2->mat_label);
+        size_t color_key = (1 << (int)t1->mat_label) + (1 << (int)t2->mat_label);
         int color_index = -1;
-        for(unsigned int k=0; k < keys.size(); k++)
+        for(size_t k=0; k < keys.size(); k++)
         {
           if(keys[k] == color_key){
             color_index = k;
@@ -388,7 +388,7 @@ namespace cleaver
     //-----------------------------------
     VertMap vert_map;
     std::vector<vec3> pruned_verts;
-    unsigned int pruned_pos = 0;
+    size_t pruned_pos = 0;
     for(int f=0; f < interfaces.size(); f++)
     {
       Face *face = faces[interfaces[f]];
@@ -402,17 +402,17 @@ namespace cleaver
       vec3 p3 = v3->pos();
 
       if (!vert_map.count(p1)) {
-        vert_map.insert(std::pair<vec3,unsigned int>(p1,pruned_pos));
+        vert_map.insert(std::pair<vec3,size_t>(p1,pruned_pos));
         pruned_pos++;
         pruned_verts.push_back(p1);
       }
       if (!vert_map.count(p2)) {
-        vert_map.insert(std::pair<vec3,unsigned int>(p2,pruned_pos));
+        vert_map.insert(std::pair<vec3,size_t>(p2,pruned_pos));
         pruned_pos++;
         pruned_verts.push_back(p2);
       }
       if (!vert_map.count(p3)) {
-        vert_map.insert(std::pair<vec3,unsigned int>(p3,pruned_pos));
+        vert_map.insert(std::pair<vec3,size_t>(p3,pruned_pos));
         pruned_pos++;
         pruned_verts.push_back(p3);
       }
@@ -448,9 +448,9 @@ namespace cleaver
       Vertex *v1 = this->verts[face->verts[0]];
       Vertex *v2 = this->verts[face->verts[1]];
       Vertex *v3 = this->verts[face->verts[2]];
-      unsigned int i1 = vert_map.find(v1->pos())->second;
-      unsigned int i2 = vert_map.find(v2->pos())->second;
-      unsigned int i3 = vert_map.find(v3->pos())->second;
+      size_t i1 = vert_map.find(v1->pos())->second;
+      size_t i2 = vert_map.find(v2->pos())->second;
+      size_t i3 = vert_map.find(v3->pos())->second;
       // output 3 vertices
       file << "3 " << i1 << " " << i2 << " " << i3 << " ";
 
@@ -504,19 +504,19 @@ namespace cleaver
     //-----------------------------------
     //           Initialize
     //-----------------------------------
-    std::vector<std::vector<unsigned int> > meshes;
-    std::vector<unsigned int> interfaces;
-    std::vector<unsigned int> colors;
-    std::vector<unsigned int> keys;
+    std::vector<std::vector<size_t> > meshes;
+    std::vector<size_t> interfaces;
+    std::vector<size_t> colors;
+    std::vector<size_t> keys;
 
     while(meshes.size() < inputs.size())
-      meshes.push_back(vector<unsigned int>());
+      meshes.push_back(vector<size_t>());
 
     // determine output faces and vertices vertex counts
     for(size_t f=0; f < faces.size(); f++)
     {
-      int t1_index = faces[f]->tets[0];
-      int t2_index = faces[f]->tets[1];
+      const int t1_index = static_cast<int>(faces[f]->tets[0]);
+      const int t2_index = static_cast<int>(faces[f]->tets[1]);
 
       if(t1_index < 0 || t2_index < 0){
         continue;
@@ -529,9 +529,9 @@ namespace cleaver
       {
         interfaces.push_back(f);
 
-        unsigned int color_key = (1 << (int)t1->mat_label) + (1 << (int)t2->mat_label);
+        size_t color_key = (1 << (int)t1->mat_label) + (1 << (int)t2->mat_label);
         int color_index = -1;
-        for(unsigned int k=0; k < keys.size(); k++)
+        for(size_t k=0; k < keys.size(); k++)
         {
           if(keys[k] == color_key){
             color_index = k;
@@ -548,7 +548,7 @@ namespace cleaver
 
 
         if(meshes.size() < keys.size()){
-          meshes.push_back(vector<unsigned int>());
+          meshes.push_back(vector<size_t>());
         }
         meshes[color_index].push_back(f);
 
@@ -556,7 +556,7 @@ namespace cleaver
     }
 
 
-    for(unsigned int m=0; m < meshes.size(); m++)
+    for(size_t m=0; m < meshes.size(); m++)
     {
       if(meshes[m].empty())
         continue;
@@ -593,7 +593,7 @@ namespace cleaver
       //-----------------------------------
       //         Write Vertex List
       //-----------------------------------
-      for(unsigned int f=0; f < meshes[m].size(); f++)
+      for(size_t f=0; f < meshes[m].size(); f++)
       {
         Face *face = faces[meshes[m][f]];
 
@@ -609,7 +609,7 @@ namespace cleaver
       //-----------------------------------
       //         Write Face List
       //-----------------------------------
-      for(unsigned int f=0; f < meshes[m].size(); f++)
+      for(size_t f=0; f < meshes[m].size(); f++)
       {
         // output 3 vertices
         file << "3 " << (3*f + 0) << " " << (3*f + 1) << " " << (3*f + 2) << " ";
@@ -665,7 +665,7 @@ namespace cleaver
     //-------------------------------------------------------------------------------------------
     //  Remaining lines list # of points:  <point #> <x> <y> <z> [attributes] [boundary marker]
     //-------------------------------------------------------------------------------------------
-    for(unsigned int i=0; i < this->verts.size(); i++)
+    for(size_t i=0; i < this->verts.size(); i++)
     {
       node_file << i+1 << " " << this->verts[i]->pos().x << " " << this->verts[i]->pos().y << " " << this->verts[i]->pos().z << endl;
     }
@@ -690,7 +690,7 @@ namespace cleaver
     //-----------------------------------------------------------------------------------------------------------
     //  Remaining lines list of # of tetrahedra:  <tetrahedron #> <node> <node> <node> <node> ... [attributes]
     //-----------------------------------------------------------------------------------------------------------
-    for(unsigned int i=0; i < this->tets.size(); i++)
+    for(size_t i=0; i < this->tets.size(); i++)
     {
       elem_file << i+1;
       for(int v=0; v < 4; v++)
@@ -725,7 +725,7 @@ namespace cleaver
     //-------------------------------------------------------------------------------------------
     //  Write each line of file <x> <y> <z>
     //-------------------------------------------------------------------------------------------
-    for(unsigned int i=0; i < this->verts.size(); i++)
+    for(size_t i=0; i < this->verts.size(); i++)
     {
       pts_file << this->verts[i]->pos().x << " " << this->verts[i]->pos().y << " " << this->verts[i]->pos().z << endl;
     }
@@ -744,7 +744,7 @@ namespace cleaver
     //-----------------------------------------------------------------------------------------------------------
     //  Write each line <node> <node> <node> <node>
     //-----------------------------------------------------------------------------------------------------------
-    for(unsigned int i=0; i < this->tets.size(); i++)
+    for(size_t i=0; i < this->tets.size(); i++)
     {
       elem_file << this->tets[i]->verts[0]->tm_v_index + 1 << " ";
       elem_file << this->tets[i]->verts[1]->tm_v_index + 1 << " ";
@@ -759,7 +759,7 @@ namespace cleaver
     string mat_filename = filename + ".txt";
     cout << "Writing mesh material file: " << mat_filename << endl;
     ofstream mat_file(mat_filename.c_str());
-    for(unsigned int i=0; i < this->tets.size(); i++)
+    for(size_t i=0; i < this->tets.size(); i++)
     {
       mat_file << this->tets[i]->mat_label + 1 << endl;
     }
@@ -1085,7 +1085,7 @@ namespace cleaver
     debug_dump << "{ \"badtets\": [" << std::endl;
     int bad_tets = 0;
 
-    for (unsigned int i=0; i < this->tets.size(); i++)
+    for (size_t i=0; i < this->tets.size(); i++)
     {
       status.printStatus();
       Tet *t = this->tets[i];
@@ -1136,7 +1136,7 @@ namespace cleaver
         bad_tets++;
 
         Json::Value tet = tet_to_json(t, this, false);
-        tet["parent"] = t->parent;
+        tet["parent"] = static_cast<int>(t->parent);
         debug_dump << tet << std::endl;
         t->flagged = true;
         std::cout << "ERROR, TET #: " << i << std::endl;
@@ -1263,7 +1263,7 @@ namespace cleaver
     vert_maps.resize(numTetsPerMat.size());
     std::vector<std::vector<vec3> > pruned_verts;
     pruned_verts.resize(numTetsPerMat.size());
-    std::vector<unsigned int> pruned_pos;
+    std::vector<size_t> pruned_pos;
     pruned_pos.resize(numTetsPerMat.size());
     for(size_t i = 0; i < numTetsPerMat.size();i++)
       pruned_pos[i] = 0;
@@ -1282,22 +1282,22 @@ namespace cleaver
       vec3 p4 = v4->pos();
 
       if (!vert_maps[label].count(p1)) {
-        vert_maps[label].insert(std::pair<vec3,unsigned int>(p1,pruned_pos[label]));
+        vert_maps[label].insert(std::pair<vec3,size_t>(p1,pruned_pos[label]));
         pruned_pos[label]++;
         pruned_verts[label].push_back(p1);
       }
       if (!vert_maps[label].count(p2)) {
-        vert_maps[label].insert(std::pair<vec3,unsigned int>(p2,pruned_pos[label]));
+        vert_maps[label].insert(std::pair<vec3,size_t>(p2,pruned_pos[label]));
         pruned_pos[label]++;
         pruned_verts[label].push_back(p2);
       }
       if (!vert_maps[label].count(p3)) {
-        vert_maps[label].insert(std::pair<vec3,unsigned int>(p3,pruned_pos[label]));
+        vert_maps[label].insert(std::pair<vec3,size_t>(p3,pruned_pos[label]));
         pruned_pos[label]++;
         pruned_verts[label].push_back(p3);
       }
       if (!vert_maps[label].count(p4)) {
-        vert_maps[label].insert(std::pair<vec3,unsigned int>(p4,pruned_pos[label]));
+        vert_maps[label].insert(std::pair<vec3,size_t>(p4,pruned_pos[label]));
         pruned_pos[label]++;
         pruned_verts[label].push_back(p4);
       }
@@ -1338,10 +1338,10 @@ namespace cleaver
       Vertex *v2 = t->verts[1];
       Vertex *v3 = t->verts[2];
       Vertex *v4 = t->verts[3];
-      unsigned int i1 = vert_maps[t->mat_label].find(v1->pos())->second;
-      unsigned int i2 = vert_maps[t->mat_label].find(v2->pos())->second;
-      unsigned int i3 = vert_maps[t->mat_label].find(v3->pos())->second;
-      unsigned int i4 = vert_maps[t->mat_label].find(v4->pos())->second;
+      size_t i1 = vert_maps[t->mat_label].find(v1->pos())->second;
+      size_t i2 = vert_maps[t->mat_label].find(v2->pos())->second;
+      size_t i3 = vert_maps[t->mat_label].find(v3->pos())->second;
+      size_t i4 = vert_maps[t->mat_label].find(v4->pos())->second;
 
       *output.at(t->mat_label) << 3 << " " << i1 <<  " " << i2 << " " << i3 << "\n";
       *output.at(t->mat_label) << 3 << " " << i2 <<  " " << i3 << " " << i4 << "\n";
@@ -1366,7 +1366,7 @@ namespace cleaver
     //-----------------------------------
     VertMap vert_map;
     std::vector<vec3> pruned_verts;
-    unsigned int pruned_pos = 0;
+    size_t pruned_pos = 0;
     for(size_t t=0; t < this->tets.size(); t++) {
       Tet* tet = this->tets[t];
 
@@ -1381,22 +1381,22 @@ namespace cleaver
       vec3 p4 = v4->pos();
 
       if (!vert_map.count(p1)) {
-        vert_map.insert(std::pair<vec3,unsigned int>(p1,pruned_pos));
+        vert_map.insert(std::pair<vec3,size_t>(p1,pruned_pos));
         pruned_pos++;
         pruned_verts.push_back(p1);
       }
       if (!vert_map.count(p2)) {
-        vert_map.insert(std::pair<vec3,unsigned int>(p2,pruned_pos));
+        vert_map.insert(std::pair<vec3,size_t>(p2,pruned_pos));
         pruned_pos++;
         pruned_verts.push_back(p2);
       }
       if (!vert_map.count(p3)) {
-        vert_map.insert(std::pair<vec3,unsigned int>(p3,pruned_pos));
+        vert_map.insert(std::pair<vec3,size_t>(p3,pruned_pos));
         pruned_pos++;
         pruned_verts.push_back(p3);
       }
       if (!vert_map.count(p4)) {
-        vert_map.insert(std::pair<vec3,unsigned int>(p4,pruned_pos));
+        vert_map.insert(std::pair<vec3,size_t>(p4,pruned_pos));
         pruned_pos++;
         pruned_verts.push_back(p4);
       }
@@ -1433,10 +1433,10 @@ namespace cleaver
       Vertex* v2 = t->verts[1];
       Vertex* v3 = t->verts[2];
       Vertex* v4 = t->verts[3];
-      unsigned int i1 = vert_map.find(v1->pos())->second;
-      unsigned int i2 = vert_map.find(v2->pos())->second;
-      unsigned int i3 = vert_map.find(v3->pos())->second;
-      unsigned int i4 = vert_map.find(v4->pos())->second;
+      size_t i1 = vert_map.find(v1->pos())->second;
+      size_t i2 = vert_map.find(v2->pos())->second;
+      size_t i3 = vert_map.find(v3->pos())->second;
+      size_t i4 = vert_map.find(v4->pos())->second;
       output << 4 << " " << i1 <<  " " << i2 << " " << i3 << " " << i4 << "\n";
     }
 
@@ -1688,7 +1688,7 @@ namespace cleaver
     file.write((char*)&nodeDataType, sizeof(int32_t));
     file.write((char*)&nodeDataSize, sizeof(int32_t));
 
-    for(unsigned int i=0; i < verts.size(); i++)
+    for(size_t i=0; i < verts.size(); i++)
     {
       if (verbose) status.printStatus();
       float_t x = (float_t)verts[i]->pos().x;
@@ -1769,7 +1769,7 @@ namespace cleaver
     file.write((char*)&cellDataType, sizeof(int32_t));
     file.write((char*)&cellDataSize, sizeof(int32_t));
 
-    for(unsigned int i=0; i < tets.size(); i++)
+    for(size_t i=0; i < tets.size(); i++)
     {
       if (verbose) status.printStatus();
       for(int v=0; v < 4; v++){
@@ -1847,7 +1847,7 @@ namespace cleaver
     file.write((char*)&fieldDataType, sizeof(int32_t));
     file.write((char*)&fieldDataSize, sizeof(int32_t));
 
-    for(unsigned int i=0; i < tets.size(); i++)
+    for(size_t i=0; i < tets.size(); i++)
     {
       if (verbose) status.printStatus();
       unsigned char m = tets[i]->mat_label;
@@ -2008,8 +2008,8 @@ namespace cleaver
     // resize tet list
     tets.resize(tet_count);
 
-    int stripped_verts_count = delete_list.size();
-    int stripped_tets_count = tets.size() - tet_count;
+    size_t stripped_verts_count = delete_list.size();
+    ptrdiff_t stripped_tets_count = tets.size() - tet_count;
 
     if(verbose) {
       std::cout << "Stripped " << stripped_tets_count << " tets from mesh exterior." << std::endl;
@@ -2112,10 +2112,10 @@ namespace cleaver
   {
     std::vector<HalfFace*> facelist;
 
-    for(unsigned int e=0; e < v->halfEdges.size(); e++)
+    for(size_t e=0; e < v->halfEdges.size(); e++)
     {
       HalfEdge *he = v->halfEdges[e];
-      for(unsigned int f=0; f < he->halfFaces.size(); f++){
+      for(size_t f=0; f < he->halfFaces.size(); f++){
 
         // if no mate (border) always add
         if(he->halfFaces[f]->mate == nullptr){
@@ -2149,12 +2149,12 @@ namespace cleaver
   {
     std::vector<HalfFace*> facelist;
 
-    for(unsigned int f=0; f < e->halfFaces.size(); f++)
+    for(size_t f=0; f < e->halfFaces.size(); f++)
       facelist.push_back(e->halfFaces[f]);
 
     // now look at mate edge, add any incident faces that don't have face-mates
     HalfEdge *me = e->mate;
-    for(unsigned int f=0; f < me->halfFaces.size(); f++){
+    for(size_t f=0; f < me->halfFaces.size(); f++){
       if(me->halfFaces[f]->mate == nullptr){
         facelist.push_back(me->halfFaces[f]);
       }
@@ -2170,16 +2170,16 @@ namespace cleaver
   {
     std::vector<Tet*> tetlist;
 
-    for(unsigned int f=0; f < e->halfFaces.size(); f++){
-      unsigned int index = (e->halfFaces[f] - &this->halfFaces[0]) / 4;
+    for(size_t f=0; f < e->halfFaces.size(); f++){
+      size_t index = (e->halfFaces[f] - &this->halfFaces[0]) / 4;
       tetlist.push_back(tets[index]);
     }
 
     // now look at mate edge, add any incident faces that don't have face-mates
     HalfEdge *me = e->mate;
-    for(unsigned int f=0; f < me->halfFaces.size(); f++){
+    for(size_t f=0; f < me->halfFaces.size(); f++){
       if(me->halfFaces[f]->mate == nullptr){
-        unsigned int index = (me->halfFaces[f] - &this->halfFaces[0]) / 4;
+        size_t index = (me->halfFaces[f] - &this->halfFaces[0]) / 4;
         tetlist.push_back(tets[index]);
       }
     }
@@ -2194,11 +2194,11 @@ namespace cleaver
   {
     std::vector<Tet*> tetlist;
 
-    unsigned int index1 = (f - &this->halfFaces[0]) / 4;
+    size_t index1 = (f - &this->halfFaces[0]) / 4;
     tetlist.push_back(tets[index1]);
 
     if(f->mate){
-      unsigned int index2 = (f->mate - &this->halfFaces[0]) / 4;
+      size_t index2 = (f->mate - &this->halfFaces[0]) / 4;
       tetlist.push_back(tets[index2]);
     }
 
@@ -2277,7 +2277,7 @@ namespace cleaver
     std::vector<HalfFace*> facelist;
     std::vector<HalfFace*> tet_faces = facesAroundTet(tet);
 
-    for(unsigned int f=0; f < 4; f++)
+    for(size_t f=0; f < 4; f++)
     {
       HalfFace *face = tet_faces[f];
 
@@ -2386,7 +2386,7 @@ namespace cleaver
     //-----------------------------------
     //  First Obtain Tet-Tet Adjacency
     //-----------------------------------
-    for(unsigned int i=0; i < this->tets.size(); i++)
+    for(size_t i=0; i < this->tets.size(); i++)
     {
       // look for a tet sharing three verts opposite vert[j]
       for (int j=0; j < 4; j++)
@@ -2400,7 +2400,7 @@ namespace cleaver
           //bool found_adjacent = false;
 
           // search over adjacent tets touching these verts
-          for (unsigned int k=0; k < v0->tets.size(); k++)
+          for (size_t k=0; k < v0->tets.size(); k++)
           {
             Tet* tet = v0->tets[k];
             if(tet != this->tets[i])
@@ -2698,8 +2698,6 @@ namespace cleaver
   //------------------------------------
   void TetMesh::removeExternalTets()
   {
-    int beforeCount = tets.size();
-
     // loop over all tets in the mesh
     std::vector<Tet*>::iterator iter = tets.begin();
     while(iter != tets.end())
@@ -2716,8 +2714,6 @@ namespace cleaver
         iter++;
     }
 
-    int afterCount = tets.size();
-
     constructFaces();
     constructBottomUpIncidences();
   }
@@ -2732,8 +2728,6 @@ namespace cleaver
   //------------------------------
   void TetMesh::removeLockedTets()
   {
-    int beforeCount = tets.size();
-
     // loop over all tets in the mesh
     std::vector<Tet*>::iterator iter = tets.begin();
     while(iter != tets.end())
@@ -2767,8 +2761,6 @@ namespace cleaver
       else
         iter++;
     }
-    int afterCount = tets.size();
-
     // fix tm indices
     for(size_t t=0; t < tets.size(); t++)
     {
@@ -2788,8 +2780,6 @@ namespace cleaver
   //------------------------------
   void TetMesh::removeMaterial(int m)
   {
-    int beforeCount = tets.size();
-
     // loop over all tets in the mesh
     std::vector<Tet*>::iterator iter = tets.begin();
     while(iter != tets.end())
@@ -2802,8 +2792,6 @@ namespace cleaver
       else
         iter++;
     }
-
-    int afterCount = tets.size();
 
     constructFaces();
     constructBottomUpIncidences();
@@ -2819,8 +2807,6 @@ namespace cleaver
   //------------------------------
   void TetMesh::removeOutsideBox(BoundingBox &box)
   {
-    int beforeCount = tets.size();
-
     // loop over all tets in the mesh
     std::vector<Tet*>::iterator iter = tets.begin();
     while(iter != tets.end())
@@ -2841,8 +2827,6 @@ namespace cleaver
       else
         iter++;
     }
-
-    int afterCount = tets.size();
 
     constructFaces();
     constructBottomUpIncidences(true);
