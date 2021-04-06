@@ -99,17 +99,17 @@ namespace cleaver
     return dist[l][m][n];
   }
 
-  int VoxelMesh::distSizeX() const
+  size_t VoxelMesh::distSizeX() const
   {
     return dist.size();
   }
 
-  int VoxelMesh::distSizeY() const
+  size_t VoxelMesh::distSizeY() const
   {
     return dist[0].size();
   }
 
-  int VoxelMesh::distSizeZ() const
+  size_t VoxelMesh::distSizeZ() const
   {
     return dist[0][0].size();
   }
@@ -117,7 +117,7 @@ namespace cleaver
   ScalarField<float>* VoxelMesh::convertToFloatField(float factor, const cleaver::vec3 &padding, const cleaver::vec3 &offset)
   {
     float *field;
-    int w, h, d, i, j, k;
+    size_t w, h, d, i, j, k;
     ScalarField<float> *ret;
     double min = 0;
 
@@ -135,7 +135,7 @@ namespace cleaver
         }
       }
     }
-    ret = new ScalarField<float>(field, w, h, d);
+    ret = new ScalarField<float>(field, static_cast<int>(w), static_cast<int>(h), static_cast<int>(d));
     double sx = 1.0 / factor;
     double sy = 1.0 / factor;
     double sz = 1.0 / factor;
@@ -435,9 +435,9 @@ namespace cleaver
     //------------------------------------------
     if (m_featureScaling != 1.0)
     {
-      int w = mesh_padded_feature.distSizeX();
-      int h = mesh_padded_feature.distSizeY();
-      int d = mesh_padded_feature.distSizeZ();
+      const int w = mesh_padded_feature.distSizeX();
+      const int h = mesh_padded_feature.distSizeY();
+      const int d = mesh_padded_feature.distSizeZ();
 
       if (verbose) status = Status(w*h*d);
       for (int k = 0; k < d; k++) {
@@ -578,10 +578,9 @@ namespace cleaver
     set<int> mySet, doneSet;
 
 
-    int w, h, d;
-    w = mesh.distSizeX();
-    h = mesh.distSizeY();
-    d = mesh.distSizeZ();
+    const int w = mesh.distSizeX();
+    const int h = mesh.distSizeY();
+    const int d = mesh.distSizeZ();
 
     for (int i = 0; i < w; i++)
     {
@@ -1152,20 +1151,20 @@ namespace cleaver
 
   void SizingFieldCreator::appendPadding(const vec3 &mypadding, const vec3 &myoffset, vector<Triple> &zeros)
   {
-    int full_w, full_h, full_d;
+    size_t full_w, full_h, full_d;
 
-    int w = mesh_feature.distSizeX();
-    int h = mesh_feature.distSizeY();
-    int d = mesh_feature.distSizeZ();
+    size_t w = mesh_feature.distSizeX();
+    size_t h = mesh_feature.distSizeY();
+    size_t d = mesh_feature.distSizeZ();
 
     full_w = w + (int)mypadding[0];
     full_h = h + (int)mypadding[1];
     full_d = d + (int)mypadding[2];
     mesh_padded_feature.init(full_w, full_h, full_d);
 
-    for (int i = 0; i < full_w; i++)
-      for (int j = 0; j < full_h; j++)
-        for (int k = 0; k < full_d; k++)
+    for (size_t i = 0; i < full_w; i++)
+      for (size_t j = 0; j < full_h; j++)
+        for (size_t k = 0; k < full_d; k++)
           mesh_padded_feature.known[i][j][k] = false;
 
     int x_offset = (int)myoffset[0];
