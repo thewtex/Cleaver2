@@ -234,8 +234,8 @@ namespace cleaver
       cout << "Writing mesh ply file: " << filename + ".ply" << endl;
     ofstream file((filename + ".ply").c_str());
 
-    int face_count = 4*tets.size();
-    int vertex_count = 3*face_count;
+    size_t face_count = 4*tets.size();
+    size_t vertex_count = 3*face_count;
 
     //-----------------------------------
     //           Write Header
@@ -344,8 +344,8 @@ namespace cleaver
     // determine output faces and vertices vertex counts
     for(size_t f=0; f < faces.size(); f++)
     {
-      int t1_index = faces[f]->tets[0];
-      int t2_index = faces[f]->tets[1];
+      const int t1_index = static_cast<int>(faces[f]->tets[0]);
+      const int t2_index = static_cast<int>(faces[f]->tets[1]);
 
       if(t1_index < 0 || t2_index < 0){
         continue;
@@ -515,8 +515,8 @@ namespace cleaver
     // determine output faces and vertices vertex counts
     for(size_t f=0; f < faces.size(); f++)
     {
-      int t1_index = faces[f]->tets[0];
-      int t2_index = faces[f]->tets[1];
+      const int t1_index = static_cast<int>(faces[f]->tets[0]);
+      const int t2_index = static_cast<int>(faces[f]->tets[1]);
 
       if(t1_index < 0 || t2_index < 0){
         continue;
@@ -1136,7 +1136,7 @@ namespace cleaver
         bad_tets++;
 
         Json::Value tet = tet_to_json(t, this, false);
-        tet["parent"] = t->parent;
+        tet["parent"] = static_cast<int>(t->parent);
         debug_dump << tet << std::endl;
         t->flagged = true;
         std::cout << "ERROR, TET #: " << i << std::endl;
@@ -2008,8 +2008,8 @@ namespace cleaver
     // resize tet list
     tets.resize(tet_count);
 
-    int stripped_verts_count = delete_list.size();
-    int stripped_tets_count = tets.size() - tet_count;
+    size_t stripped_verts_count = delete_list.size();
+    ptrdiff_t stripped_tets_count = tets.size() - tet_count;
 
     if(verbose) {
       std::cout << "Stripped " << stripped_tets_count << " tets from mesh exterior." << std::endl;
@@ -2170,16 +2170,16 @@ namespace cleaver
   {
     std::vector<Tet*> tetlist;
 
-    for(unsigned int f=0; f < e->halfFaces.size(); f++){
-      unsigned int index = (e->halfFaces[f] - &this->halfFaces[0]) / 4;
+    for(size_t f=0; f < e->halfFaces.size(); f++){
+      size_t index = (e->halfFaces[f] - &this->halfFaces[0]) / 4;
       tetlist.push_back(tets[index]);
     }
 
     // now look at mate edge, add any incident faces that don't have face-mates
     HalfEdge *me = e->mate;
-    for(unsigned int f=0; f < me->halfFaces.size(); f++){
+    for(size_t f=0; f < me->halfFaces.size(); f++){
       if(me->halfFaces[f]->mate == nullptr){
-        unsigned int index = (me->halfFaces[f] - &this->halfFaces[0]) / 4;
+        size_t index = (me->halfFaces[f] - &this->halfFaces[0]) / 4;
         tetlist.push_back(tets[index]);
       }
     }
@@ -2698,8 +2698,6 @@ namespace cleaver
   //------------------------------------
   void TetMesh::removeExternalTets()
   {
-    int beforeCount = tets.size();
-
     // loop over all tets in the mesh
     std::vector<Tet*>::iterator iter = tets.begin();
     while(iter != tets.end())
@@ -2716,8 +2714,6 @@ namespace cleaver
         iter++;
     }
 
-    int afterCount = tets.size();
-
     constructFaces();
     constructBottomUpIncidences();
   }
@@ -2732,8 +2728,6 @@ namespace cleaver
   //------------------------------
   void TetMesh::removeLockedTets()
   {
-    int beforeCount = tets.size();
-
     // loop over all tets in the mesh
     std::vector<Tet*>::iterator iter = tets.begin();
     while(iter != tets.end())
@@ -2767,8 +2761,6 @@ namespace cleaver
       else
         iter++;
     }
-    int afterCount = tets.size();
-
     // fix tm indices
     for(size_t t=0; t < tets.size(); t++)
     {
@@ -2788,8 +2780,6 @@ namespace cleaver
   //------------------------------
   void TetMesh::removeMaterial(int m)
   {
-    int beforeCount = tets.size();
-
     // loop over all tets in the mesh
     std::vector<Tet*>::iterator iter = tets.begin();
     while(iter != tets.end())
@@ -2802,8 +2792,6 @@ namespace cleaver
       else
         iter++;
     }
-
-    int afterCount = tets.size();
 
     constructFaces();
     constructBottomUpIncidences();
@@ -2819,8 +2807,6 @@ namespace cleaver
   //------------------------------
   void TetMesh::removeOutsideBox(BoundingBox &box)
   {
-    int beforeCount = tets.size();
-
     // loop over all tets in the mesh
     std::vector<Tet*>::iterator iter = tets.begin();
     while(iter != tets.end())
@@ -2841,8 +2827,6 @@ namespace cleaver
       else
         iter++;
     }
-
-    int afterCount = tets.size();
 
     constructFaces();
     constructBottomUpIncidences(true);
