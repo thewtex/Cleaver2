@@ -157,8 +157,8 @@ namespace cleaver
     }
 
     Json::Value badTets = root["badtets"];
-    for (int i = 0; i < badTets.size(); i++) {
-      Json::Value tet = badTets[i];
+    for (size_t i = 0; i < badTets.size(); i++) {
+      Json::Value tet = badTets[static_cast<int>(i)];
       m_tets_to_record.insert((size_t)tet["parent"].asUInt64());
     }
 
@@ -430,7 +430,7 @@ namespace cleaver
     double altitude = std::abs(dot(n, ray));
     double safe_length = (0.5 - xi)*altitude;
 
-    return safe_length;
+    return static_cast<float>(safe_length);
   }
 
 
@@ -485,7 +485,7 @@ namespace cleaver
     double safe_length1 = (0.5 - xi)*altitude1;
     double safe_length2 = (0.5 - xi)*altitude2;
     double safe_length3 = (0.5 - xi)*altitude3;
-    return std::min(std::min(safe_length1, safe_length2), safe_length3);
+    return static_cast<float>(std::min(std::min(safe_length1, safe_length2), safe_length3));
   }
 
 
@@ -1856,7 +1856,7 @@ namespace cleaver
       for (unsigned int i = 0; i < viol_tets.size(); i++)
         warp_point += viol_tets[i]->quadruple->pos();
 
-      warp_point /= viol_edges.size() + viol_faces.size() + viol_tets.size();
+      warp_point /= static_cast<double>(viol_edges.size() + viol_faces.size() + viol_tets.size());
     }
 
     //---------------------------------------
