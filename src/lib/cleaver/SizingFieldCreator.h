@@ -77,9 +77,9 @@ public:
 
     void setDist(int l, int m, int n, double value);
     double getDist(int l, int m, int n) const;
-    int distSizeX() const;
-    int distSizeY() const;
-    int distSizeZ() const;
+    size_t distSizeX() const;
+    size_t distSizeY() const;
+    size_t distSizeZ() const;
 
     private:
       std::string name_;

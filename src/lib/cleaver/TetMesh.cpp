@@ -344,8 +344,8 @@ namespace cleaver
     // determine output faces and vertices vertex counts
     for(size_t f=0; f < faces.size(); f++)
     {
-      size_t t1_index = faces[f]->tets[0];
-      size_t t2_index = faces[f]->tets[1];
+      const int t1_index = static_cast<int>(faces[f]->tets[0]);
+      const int t2_index = static_cast<int>(faces[f]->tets[1]);
 
       if(t1_index < 0 || t2_index < 0){
         continue;
@@ -515,8 +515,8 @@ namespace cleaver
     // determine output faces and vertices vertex counts
     for(size_t f=0; f < faces.size(); f++)
     {
-      size_t t1_index = faces[f]->tets[0];
-      size_t t2_index = faces[f]->tets[1];
+      const int t1_index = static_cast<int>(faces[f]->tets[0]);
+      const int t2_index = static_cast<int>(faces[f]->tets[1]);
 
       if(t1_index < 0 || t2_index < 0){
         continue;
@@ -1136,7 +1136,7 @@ namespace cleaver
         bad_tets++;
 
         Json::Value tet = tet_to_json(t, this, false);
-        tet["parent"] = t->parent;
+        tet["parent"] = static_cast<int>(t->parent);
         debug_dump << tet << std::endl;
         t->flagged = true;
         std::cout << "ERROR, TET #: " << i << std::endl;
@@ -2009,7 +2009,7 @@ namespace cleaver
     tets.resize(tet_count);
 
     size_t stripped_verts_count = delete_list.size();
-    size_t stripped_tets_count = tets.size() - tet_count;
+    ptrdiff_t stripped_tets_count = tets.size() - tet_count;
 
     if(verbose) {
       std::cout << "Stripped " << stripped_tets_count << " tets from mesh exterior." << std::endl;

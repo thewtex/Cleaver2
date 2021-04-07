@@ -125,7 +125,7 @@ public:
     bool isExterior:1;             // is not part of domain
     bool violating:1;            // is this cut violating
     bool warped:1;               // has this edge been warped
-    size_t tm_v_index;
+    int tm_v_index;
     unsigned char label;       // single label (for generating texture image)
     bool  *lbls;               // material labels
     bool dual;
