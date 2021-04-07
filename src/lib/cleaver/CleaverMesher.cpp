@@ -3038,7 +3038,8 @@ namespace cleaver
       //-----------------------------------
       // set parent to self
       //-----------------------------------
-      size_t parent = tet->parent = t;
+      tet->parent = static_cast<int>(t);
+      const size_t parent = tet->parent;
 
       //----------------------------------------
       // Prepare adjacency info for Stenciling
@@ -3178,7 +3179,7 @@ namespace cleaver
             {
               if (tet->verts[v]->tm_v_index < 0)
               {
-                tet->verts[v]->tm_v_index = m_bgMesh->verts.size();
+                tet->verts[v]->tm_v_index = static_cast<int>(m_bgMesh->verts.size());
                 m_bgMesh->verts.push_back(tet->verts[v]);
               }
               tet->verts[v]->tets.push_back(tet);
@@ -3203,10 +3204,10 @@ namespace cleaver
         // set tet to proper material
         total_changed++;
         tet->mat_label = tet->verts[0]->label;
-        tet->tm_index = t;
+        tet->tm_index = static_cast<int>(t);
         for (int v = 0; v < 4; v++) {
           if (tet->verts[v]->tm_v_index < 0) {
-            tet->verts[v]->tm_v_index = m_bgMesh->verts.size();
+            tet->verts[v]->tm_v_index = static_cast<int>(m_bgMesh->verts.size());
             m_bgMesh->verts.push_back(tet->verts[v]);
           }
           tet->verts[v]->tets.push_back(tet);
