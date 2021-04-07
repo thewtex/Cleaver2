@@ -321,7 +321,7 @@ namespace cleaver
         status.printStatus();
       }
       // Get Vertex
-      cleaver::Vertex *vertex = m_bgMesh->verts[v];
+      cleaver::Vertex *vertex = (*m_bgMesh).verts[v];
 
       // Grab Material Label
       vertex->label = m_volume->maxAt(vertex->pos());
@@ -3038,7 +3038,7 @@ namespace cleaver
       //-----------------------------------
       // set parent to self
       //-----------------------------------
-      int parent = tet->parent = t;
+      size_t parent = tet->parent = t;
 
       //----------------------------------------
       // Prepare adjacency info for Stenciling
