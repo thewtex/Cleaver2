@@ -575,7 +575,7 @@ namespace cleaver
 
     priority_queue<QueueIndex, vector<QueueIndex>, CompareDist> myqueue;
     QueueIndex temp, newtemp, left, leftleft, right, rightright;
-    set<int> mySet, doneSet;
+    set<size_t> mySet, doneSet;
 
 
     const size_t w = mesh.distSizeX();
@@ -651,7 +651,7 @@ namespace cleaver
           }
           if (exists(left, mesh) && mesh.known[left.index[0]][left.index[1]][left.index[2]])
             flag0 = 1;
-          int dummy = w*h*left.index[0] + w*left.index[1] + left.index[2];
+          size_t dummy = w*h*left.index[0] + w*left.index[1] + left.index[2];
           if (exists(leftleft, mesh) && mesh.known[leftleft.index[0]][leftleft.index[1]][leftleft.index[2]] && mySet.find(dummy) == mySet.end())
             flag1 = 1;
           if (exists(right, mesh) && mesh.known[right.index[0]][right.index[1]][right.index[2]])

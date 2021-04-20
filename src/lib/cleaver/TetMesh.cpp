@@ -561,7 +561,7 @@ namespace cleaver
       if(meshes[m].empty())
         continue;
 
-      std::pair<int,int> mats = keyToPair(keys[static_cast<unsigned int>(m)]);
+      std::pair<int,int> mats = keyToPair(static_cast<unsigned int>(keys[m]));
 
       const int mat1 = mats.first;
       const int mat2 = mats.second;
