@@ -363,14 +363,14 @@ namespace cleaver
         for(size_t k=0; k < keys.size(); k++)
         {
           if(keys[k] == color_key){
-            color_index = k;
+            color_index = static_cast<int>(k);
             break;
           }
         }
         if(color_index == -1)
         {
           keys.push_back(color_key);
-          color_index = keys.size() - 1;
+          color_index = static_cast<int>(keys.size() - 1);
         }
 
         colors.push_back(color_index);
@@ -534,14 +534,14 @@ namespace cleaver
         for(size_t k=0; k < keys.size(); k++)
         {
           if(keys[k] == color_key){
-            color_index = k;
+            color_index = static_cast<int>(k);
             break;
           }
         }
         if(color_index == -1)
         {
           keys.push_back(color_key);
-          color_index = keys.size() - 1;
+          color_index = static_cast<int>(keys.size() - 1);
         }
 
         colors.push_back(color_index);
@@ -561,7 +561,7 @@ namespace cleaver
       if(meshes[m].empty())
         continue;
 
-      std::pair<int,int> mats = keyToPair(keys[static_cast<int>(m)]);
+      std::pair<int,int> mats = keyToPair(keys[static_cast<unsigned int>(m)]);
 
       const int mat1 = mats.first;
       const int mat2 = mats.second;
@@ -974,7 +974,7 @@ namespace cleaver
         {
           // make a new face
           face->tets[0] = this->tets[i]->tm_index;
-          face->face_index[0] = j;
+          face->face_index[0] = static_cast<int>(j);
 
           face->verts[0] = this->tets[i]->verts[(j+1)%4]->tm_v_index;
           face->verts[1] = this->tets[i]->verts[(j+2)%4]->tm_v_index;
@@ -1026,8 +1026,8 @@ namespace cleaver
         }
         // Boundary Face
         else if(this->tets[i]->tets[j] == nullptr){
-          face->tets[0] = i;
-          face->face_index[0] = j;
+          face->tets[0] = static_cast<int>(i);
+          face->face_index[0] = static_cast<int>(j);
           face->tets[1] = -1;
           face->verts[0] = this->tets[i]->verts[(j+1)%4]->tm_v_index;
           face->verts[1] = this->tets[i]->verts[(j+2)%4]->tm_v_index;

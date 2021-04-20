@@ -82,19 +82,19 @@ namespace cleaver
   {
   }
 
-  void VoxelMesh::init(int l, int m, int n)
+  void VoxelMesh::init(size_t l, size_t m, size_t n)
   {
     fill3DVector(known, false, l, m, n);
 
     fill3DVector(dist, 1e10, l, m, n);
   }
 
-  void VoxelMesh::setDist(int l, int m, int n, double value)
+  void VoxelMesh::setDist(size_t l, size_t m, size_t n, double value)
   {
     dist[l][m][n] = value;
   }
 
-  double VoxelMesh::getDist(int l, int m, int n) const
+  double VoxelMesh::getDist(size_t l, size_t m, size_t n) const
   {
     return dist[l][m][n];
   }
@@ -435,9 +435,9 @@ namespace cleaver
     //------------------------------------------
     if (m_featureScaling != 1.0)
     {
-      const int w = mesh_padded_feature.distSizeX();
-      const int h = mesh_padded_feature.distSizeY();
-      const int d = mesh_padded_feature.distSizeZ();
+      const size_t w = mesh_padded_feature.distSizeX();
+      const size_t h = mesh_padded_feature.distSizeY();
+      const size_t d = mesh_padded_feature.distSizeZ();
 
       if (verbose) status = Status(w*h*d);
       for (size_t k = 0; k < d; k++) {
@@ -578,15 +578,15 @@ namespace cleaver
     set<int> mySet, doneSet;
 
 
-    const int w = mesh.distSizeX();
-    const int h = mesh.distSizeY();
-    const int d = mesh.distSizeZ();
+    const size_t w = mesh.distSizeX();
+    const size_t h = mesh.distSizeY();
+    const size_t d = mesh.distSizeZ();
 
-    for (int i = 0; i < w; i++)
+    for (size_t i = 0; i < w; i++)
     {
-      for (int j = 0; j < h; j++)
+      for (size_t j = 0; j < h; j++)
       {
-        for (int k = 0; k < d; k++)
+        for (size_t k = 0; k < d; k++)
         {
           mesh.known[i][j][k] = false;
         }
