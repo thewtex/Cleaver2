@@ -358,7 +358,7 @@ namespace cleaver
       {
         interfaces.push_back(f);
 
-        size_t color_key = (1 << (int)t1->mat_label) + (1 << (int)t2->mat_label);
+        const int color_key = (1 << (int)t1->mat_label) + (1 << (int)t2->mat_label);
         int color_index = -1;
         for(size_t k=0; k < keys.size(); k++)
         {
@@ -529,7 +529,7 @@ namespace cleaver
       {
         interfaces.push_back(f);
 
-        size_t color_key = (1 << (int)t1->mat_label) + (1 << (int)t2->mat_label);
+        const int color_key = (1 << (int)t1->mat_label) + (1 << (int)t2->mat_label);
         int color_index = -1;
         for(size_t k=0; k < keys.size(); k++)
         {
@@ -561,10 +561,10 @@ namespace cleaver
       if(meshes[m].empty())
         continue;
 
-      std::pair<int,int> mats = keyToPair(keys[m]);
+      std::pair<int,int> mats = keyToPair(keys[static_cast<int>(m)]);
 
-      int mat1 = mats.first;
-      int mat2 = mats.second;
+      const int mat1 = mats.first;
+      const int mat2 = mats.second;
 
       stringstream fns;
       fns << "interface." << mat1 << "-" << mat2 << ".ply";
@@ -1662,7 +1662,7 @@ namespace cleaver
     int32_t nodeDimensionType = miINT32;
     int32_t nodeDimensionSize = 8;
     int32_t nodeDimensionRows = 3;
-    int32_t nodeDimensionCols = verts.size() ;
+    int32_t nodeDimensionCols = static_cast<int32_t>(verts.size());
 
     file.write((char*)&nodeDimensionType, sizeof(int32_t));
     file.write((char*)&nodeDimensionSize, sizeof(int32_t));
@@ -1743,7 +1743,7 @@ namespace cleaver
     int32_t cellDimensionType = miINT32;
     int32_t cellDimensionSize = 8;
     int32_t cellDimensionRows = 4;
-    int32_t cellDimensionCols = tets.size();
+    int32_t cellDimensionCols = static_cast<int32_t>(tets.size());
 
     file.write((char*)&cellDimensionType, sizeof(int32_t));
     file.write((char*)&cellDimensionSize, sizeof(int32_t));
@@ -1821,7 +1821,7 @@ namespace cleaver
     int32_t fieldDimensionType = miINT32;
     int32_t fieldDimensionSize = 8;
     int32_t fieldDimensionRows = 1;
-    int32_t fieldDimensionCols = tets.size();
+    int32_t fieldDimensionCols = static_cast<int32_t>(tets.size());
 
     file.write((char*)&fieldDimensionType, sizeof(int32_t));
     file.write((char*)&fieldDimensionSize, sizeof(int32_t));
@@ -1908,26 +1908,26 @@ namespace cleaver
     //----------------------------
 
     Tet *tet = new Tet(v1, v2, v3, v4, material);
-    tet->tm_index = tets.size();
+    tet->tm_index = static_cast<int>(tets.size());
     tets.push_back(tet);
 
     //------------------------
     //   Add Verts To List
     //------------------------
     if(v1->tm_v_index < 0){
-      v1->tm_v_index = verts.size();
+      v1->tm_v_index = static_cast<int>(verts.size());
       verts.push_back(v1);
     }
     if(v2->tm_v_index < 0){
-      v2->tm_v_index = verts.size();
+      v2->tm_v_index = static_cast<int>(verts.size());
       verts.push_back(v2);
     }
     if(v3->tm_v_index < 0){
-      v3->tm_v_index = verts.size();
+      v3->tm_v_index = static_cast<int>(verts.size());
       verts.push_back(v3);
     }
     if(v4->tm_v_index < 0){
-      v4->tm_v_index = verts.size();
+      v4->tm_v_index = static_cast<int>(verts.size());
       verts.push_back(v4);
     }
 
@@ -1969,7 +1969,7 @@ namespace cleaver
 
           // add to verts list if havn't already
           if(tet->verts[v]->tm_v_index < 0){
-            tet->verts[v]->tm_v_index = verts.size();
+            tet->verts[v]->tm_v_index = static_cast<int>(verts.size());
             verts.push_back(tet->verts[v]);
           }
         }
@@ -2678,7 +2678,7 @@ namespace cleaver
       if (attrCount > 1) tet->parent = parent;
     }
 
-    mesh->material_count = mats.size();
+    mesh->material_count = static_cast<int>(mats.size());
     if (verbose)
       std::cout << "Number of materials: " << mats.size() << std::endl;
 
@@ -2764,7 +2764,7 @@ namespace cleaver
     // fix tm indices
     for(size_t t=0; t < tets.size(); t++)
     {
-      tets[t]->tm_index = t;
+      tets[t]->tm_index = static_cast<int>(t);
     }
 
     constructFaces();

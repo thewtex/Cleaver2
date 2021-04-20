@@ -135,7 +135,7 @@ namespace cleaver
         }
       }
     }
-    ret = new ScalarField<float>(field, w, h, d);
+    ret = new ScalarField<float>(field, static_cast<int>(w), static_cast<int>(h), static_cast<int>(d));
     double sx = 1.0 / factor;
     double sy = 1.0 / factor;
     double sz = 1.0 / factor;
@@ -435,9 +435,9 @@ namespace cleaver
     //------------------------------------------
     if (m_featureScaling != 1.0)
     {
-      size_t w = mesh_padded_feature.distSizeX();
-      size_t h = mesh_padded_feature.distSizeY();
-      size_t d = mesh_padded_feature.distSizeZ();
+      const int w = mesh_padded_feature.distSizeX();
+      const int h = mesh_padded_feature.distSizeY();
+      const int d = mesh_padded_feature.distSizeZ();
 
       if (verbose) status = Status(w*h*d);
       for (size_t k = 0; k < d; k++) {
@@ -578,10 +578,9 @@ namespace cleaver
     set<int> mySet, doneSet;
 
 
-    int w, h, d;
-    w = mesh.distSizeX();
-    h = mesh.distSizeY();
-    d = mesh.distSizeZ();
+    const int w = mesh.distSizeX();
+    const int h = mesh.distSizeY();
+    const int d = mesh.distSizeZ();
 
     for (int i = 0; i < w; i++)
     {

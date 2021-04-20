@@ -3039,7 +3039,7 @@ namespace cleaver
       // set parent to self
       //-----------------------------------
       tet->parent = static_cast<int>(t);
-      const size_t parent = tet->parent;
+      const int parent = tet->parent;
 
       //----------------------------------------
       // Prepare adjacency info for Stenciling
